@@ -1,0 +1,64 @@
+class Solution {
+    int parent[];
+    int componentSize[];
+    int noOfCmp;
+    private void union(int cmp1,int cmp2)
+    {
+        int parent1 = findParent(cmp1);
+        int parent2 = findParent(cmp2);
+        if(parent1 == parent2)
+            return; //both belong to same component
+        else
+        {
+             //both belong to diff component 
+             if(componentSize[parent1] >= componentSize[parent2])
+             {
+                // Merge and make component 1 leader
+                 parent[parent2] = parent1;
+                 if(componentSize[parent1] == componentSize[parent2])
+                 componentSize[parent1] +=1;
+             }
+             else
+                parent[parent1] = parent2;
+             noOfCmp--;
+        }
+    }
+    
+    private int findParent(int cmp)
+    {
+        while(parent[cmp] != cmp)
+            cmp = parent[cmp];
+        return cmp;
+    }
+    
+    public int earliestAcq(int[][] logs, int N) {
+        parent = new int[N];
+        componentSize = new int[N];
+        noOfCmp = N;
+        for(int i = 0; i< N; i++)
+        {
+            componentSize[i] = 1;
+            parent[i] = i;
+        }
+        Arrays.sort(logs, new Comparator<int[]>(){
+            public int compare(int[] a, int b[])
+            {
+                return a[0]-b[0];
+            }
+        });
+           //union componenets one by one 
+        for(int i = 0; i < logs.length; i++)
+        {
+            //find parent
+            //System.out.println(Arrays.toString(logs[i]));
+            int cmp1 = logs[i][1];
+            int cmp2 = logs[i][2];
+            //call union
+            union(cmp1,cmp2);
+            if(noOfCmp == 1)
+              return logs[i][0];
+        }
+        return -1;
+    }
+    
+}
