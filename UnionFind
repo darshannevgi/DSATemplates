@@ -26,9 +26,10 @@ class Solution {
     
     private int findParent(int cmp)
     {
-        while(parent[cmp] != cmp)
-            cmp = parent[cmp];
-        return cmp;
+        if(parent[cmp] == cmp)
+            return cmp; 
+        parent[cmp] = findParent(parent[cmp]);
+        return parent[cmp];
     }
     
     public int earliestAcq(int[][] logs, int N) {
